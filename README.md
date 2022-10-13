@@ -1,2 +1,3 @@
-# battleship-client
+# battleship game
+
 First Typescript project
