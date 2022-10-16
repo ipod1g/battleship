@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import CreateBoard from '../components/CreateBoard';
-import GenerateShips from '../components/GenerateShips';
+import React, { useState, useEffect, useRef } from "react";
+import CreateBoard from "../components/CreateBoard";
+import GenerateShips from "../components/GenerateShips";
 // import useGenerateShips from '../hooks/GenerateShips';
 
 interface IGame {
@@ -11,42 +11,44 @@ interface IGame {
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
 const Game = () => {
-  const [userSquares, setUserSquares] = useState<IGame['boardArray']>([]);
-  const [opponentSquares, setOpponentSquares] = useState<IGame['boardArray']>([]);
+  const [userSquares, setUserSquares] = useState<IGame["boardArray"]>([]);
+  const [opponentSquares, setOpponentSquares] = useState<IGame["boardArray"]>(
+    []
+  );
   const opponentRef = useRef<HTMLDivElement>(null);
 
   const width = 10;
-  const [shipArray, setShipArray] = useState<IGame['shipArray']>([
+  const [shipArray, setShipArray] = useState<IGame["shipArray"]>([
     {
-      name: 'destroyer',
+      name: "destroyer",
       directions: [
         [0, 1],
         [0, width],
       ],
     },
     {
-      name: 'submarine',
+      name: "submarine",
       directions: [
         [0, 1, 2],
         [0, width, width * 2],
       ],
     },
     {
-      name: 'cruiser',
+      name: "cruiser",
       directions: [
         [0, 1, 2],
         [0, width, width * 2],
       ],
     },
     {
-      name: 'battleship',
+      name: "battleship",
       directions: [
         [0, 1, 2, 3],
         [0, width, width * 2, width * 3],
       ],
     },
     {
-      name: 'carrier',
+      name: "carrier",
       directions: [
         [0, 1, 2, 3, 4],
         [0, width, width * 2, width * 3, width * 4],
@@ -70,14 +72,17 @@ const Game = () => {
   return (
     <div>
       <div className="container">
-        <div className="battleship-grid grid-user">
+        <div className="grid-user battleship-grid">
           <CreateBoard width={10} setSquares={setUserSquares}></CreateBoard>
         </div>
-        <div className="battleship-grid grid-computer" ref={opponentRef}>
+        <div className="grid-computer battleship-grid" ref={opponentRef}>
           <CreateBoard width={10} setSquares={setOpponentSquares}></CreateBoard>
         </div>
       </div>
-      <button style={{ height: '100px', width: '100px' }} onClick={() => handleStart()}>
+      <button
+        style={{ height: "100px", width: "100px" }}
+        onClick={() => handleStart()}
+      >
         Generate
       </button>
     </div>

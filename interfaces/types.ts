@@ -13,7 +13,7 @@ export interface IFinishedProps {
 }
 
 export interface IGenerateShipsArguments {
-  ship: { name: string; directions: number[][] };
+  ship: { name: string; directions: number[][]; };
   opponentSquares: any[];
   setShipArray?: (shipArray: any[]) => void;
 }
