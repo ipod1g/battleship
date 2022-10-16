@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
-import { ICreateBoardProps } from "../interfaces/types";
+
+export interface IBoard {
+  width: number;
+  setSquares?: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
+}
 
 //Creates the board for placement and for the opponent
-const CreateBoard = (props: ICreateBoardProps) => {
+const Board = (props: IBoard) => {
   const { width } = props;
 
-  const setSquaresDefined = (array: any[]) => {
+  const setSquaresDefined = (array: JSX.Element[]) => {
     props.setSquares?.(array);
   };
 
@@ -21,4 +25,4 @@ const CreateBoard = (props: ICreateBoardProps) => {
   return <>{squaresArray}</>;
 };
 
-export default CreateBoard;
+export default Board;

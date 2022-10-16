@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import CreateBoard from "../components/CreateBoard";
-import GenerateShips from "../components/GenerateShips";
+import Board from "../components/Board";
+import GenerateShips from "../functions/GenerateShips";
+import { Ship } from "../interfaces/types";
 // import useGenerateShips from '../hooks/GenerateShips';
 
 interface IGame {
-  boardArray: any[];
-  shipArray: { name: string; directions: number[][] }[];
+  boardArray: JSX.Element[];
+  shipArray: Ship[];
 }
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
@@ -73,10 +74,10 @@ const Game = () => {
     <div>
       <div className="container">
         <div className="grid-user battleship-grid">
-          <CreateBoard width={10} setSquares={setUserSquares}></CreateBoard>
+          <Board width={10} setSquares={setUserSquares}></Board>
         </div>
         <div className="grid-computer battleship-grid" ref={opponentRef}>
-          <CreateBoard width={10} setSquares={setOpponentSquares}></CreateBoard>
+          <Board width={10} setSquares={setOpponentSquares}></Board>
         </div>
       </div>
       <button

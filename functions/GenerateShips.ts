@@ -1,12 +1,12 @@
-import React, { RefObject, useEffect, useState } from "react";
-import { IGenerateShipsArguments } from "../interfaces/types";
+import { RefObject } from "react";
+import { Ship } from "../interfaces/types";
 
-export default function GenerateShips(
-  opponentSquares: any[],
-  ship: IGenerateShipsArguments["ship"],
-  opponentRef: RefObject<HTMLDivElement>
+const GenerateShips = (
+  opponentSquares: JSX.Element[],
+  ship: Ship,
+  opponentRef: RefObject<HTMLDivElement>,
   // setShipArray: IArguments['setShipArray']
-) {
+) => {
   // const setShipArrayDefined = (array: any[]) => {
   //   setShipArray?.(array);
   // };
@@ -27,7 +27,7 @@ export default function GenerateShips(
   let randomStart = Math.abs(
     Math.floor(
       Math.random() * opponentSquares.length -
-        ship.directions[0].length * direction
+      ship.directions[0].length * direction
     )
   );
 
@@ -79,4 +79,6 @@ export default function GenerateShips(
   // else GenerateShips(opponentSquares, ship, opponentRef);
 
   // return { isAtLeftEdge, isAtRightEdge, randomStart, currentShipDirection };
-}
+};
+
+export default GenerateShips;
