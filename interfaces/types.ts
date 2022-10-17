@@ -8,6 +8,9 @@ export interface IFinishedProps {
 }
 
 export interface Ship {
-  name: string,
-  directions: number[][];
+  type: ShipNames;
+}
+
+export enum ShipNames {
+  Destroyer = 1,
 }

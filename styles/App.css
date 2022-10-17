@@ -57,8 +57,10 @@
   grid-template-columns: repeat(10, 4.6vmin);
 }
 
-.battleship-grid div {
+.battleship-grid > div > div {
   border: 1px solid hsla(0, 0%, 100%, .2);
+  height: 4.6vmin;
+  width: 4.6vmin;
 }
 
 .placed {

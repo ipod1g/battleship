@@ -1,28 +1,24 @@
 import React, { useEffect } from "react";
 
-export interface IBoard {
-  width: number;
-  setSquares?: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
+export interface Board {
+  board: number[][];
 }
 
 //Creates the board for placement and for the opponent
-const Board = (props: IBoard) => {
-  const { width } = props;
-
-  const setSquaresDefined = (array: JSX.Element[]) => {
-    props.setSquares?.(array);
-  };
-
-  const squaresArray = Array.from({ length: width * width }, (_, i) => (
-    <div key={i} id={`${i}`}></div>
-  ));
-
-  useEffect(() => {
-    setSquaresDefined(squaresArray);
-    return () => {};
-  }, []);
-
-  return <>{squaresArray}</>;
+const Board = (props: Board) => {
+  return (
+    <>
+      {props.board.map((row, i) => (
+        <div key={i} id={`row-${i}`}>
+          {row.map((value, j) => (
+            <div key={j} id={`column-${j}`}>
+              {value}
+            </div>
+          ))}
+        </div>
+      ))}
+    </>
+  );
 };
 
 export default Board;
