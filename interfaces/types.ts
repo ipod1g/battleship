@@ -7,10 +7,14 @@ export interface IFinishedProps {
   restart: () => void;
 }
 
-export interface Ship {
+export type Ship = {
   type: ShipNames;
-}
+};
 
 export enum ShipNames {
-  Destroyer = 1,
+  Destroyer = 2,
+  Submarine = 3,
+  Cruiser = 3,
+  Battleship = 4,
+  Carrier = 5,
 }

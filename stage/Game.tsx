@@ -10,22 +10,47 @@ const Game = () => {
   const [opponentBoard, setOpponentBoard] = useState<number[][]>([]);
   const [playerBoard, setPlayerBoard] = useState<number[][]>([]);
 
+  const testShip: Ship = {
+    //enum = length
+    type: ShipNames["Destroyer"],
+  };
+
   const width = 10;
 
+  // make empty board for both players
   function createBoard() {
     return Array(width)
       .fill(0)
       .map(() => Array(width).fill(0));
   }
 
-  // make board for both players
+  // x=col y=row
+  // Add a thing to check for user's coordinate outside the grid
+  const placeShip = (ship: Ship, x: number, y: number) => {
+    let orientation: string =
+      Math.round(Math.random()) >= 0.5 ? "horizontal" : "vertical";
+
+    const updateBoard: number[][] = [...opponentBoard];
+    if (orientation === "horizontal") {
+      for (let i = x; i < x + ship["type"]; i++) {
+        updateBoard[i][y] = ship["type"];
+      }
+    } else if (orientation === "vertical") {
+      for (let j = y; j < y + ship["type"]; j++) {
+        updateBoard[x][j] = ship["type"];
+      }
+    }
+    setOpponentBoard(updateBoard);
+  };
 
   function handleStart() {
-    // GenerateShips(shipArray[0], opponentRef);
-    // GenerateShips(shipArray[1], opponentRef);
-    // GenerateShips(shipArray[2], opponentRef);
-    // GenerateShips(shipArray[3], opponentRef);
-    // GenerateShips(shipArray[4], opponentRef);
+    //Suppose I click on (0,0)
+    placeShip(
+      testShip,
+      Math.floor(Math.random() * 9),
+      Math.floor(Math.random() * 9)
+    );
+    // console.table(opponentBoard);
   }
 
   useEffect(() => {
