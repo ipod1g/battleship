@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Board from "../components/Board";
-import GenerateShips from "../functions/GenerateShips";
+import placeShipsRandom from "../functions/placeShipsRandom";
 import { Ship, ShipNames } from "../interfaces/types";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
@@ -10,47 +10,42 @@ const Game = () => {
   const [opponentBoard, setOpponentBoard] = useState<number[][]>([]);
   const [playerBoard, setPlayerBoard] = useState<number[][]>([]);
 
-  const testShip: Ship = {
-    //enum = length
-    type: ShipNames["Destroyer"],
-  };
+  const Ships: Ship[] = [
+    {
+      type: ShipNames["Destroyer"],
+    },
+    {
+      type: ShipNames["Submarine"],
+    },
+    {
+      type: ShipNames["Cruiser"],
+    },
+    {
+      type: ShipNames["Battleship"],
+    },
+    {
+      type: ShipNames["Carrier"],
+    },
+  ];
 
   const width = 10;
 
   // make empty board for both players
-  function createBoard() {
+  function createBoard(): number[][] {
     return Array(width)
       .fill(0)
       .map(() => Array(width).fill(0));
   }
 
-  // x=col y=row
-  // Add a thing to check for user's coordinate outside the grid
-  const placeShip = (ship: Ship, x: number, y: number) => {
-    let orientation: string =
-      Math.round(Math.random()) >= 0.5 ? "horizontal" : "vertical";
-
-    const updateBoard: number[][] = [...opponentBoard];
-    if (orientation === "horizontal") {
-      for (let i = x; i < x + ship["type"]; i++) {
-        updateBoard[i][y] = ship["type"];
-      }
-    } else if (orientation === "vertical") {
-      for (let j = y; j < y + ship["type"]; j++) {
-        updateBoard[x][j] = ship["type"];
-      }
-    }
-    setOpponentBoard(updateBoard);
-  };
-
   function handleStart() {
-    //Suppose I click on (0,0)
-    placeShip(
-      testShip,
-      Math.floor(Math.random() * 9),
-      Math.floor(Math.random() * 9)
-    );
-    // console.table(opponentBoard);
+    //resets the board everytime this function is called
+    setOpponentBoard((prev) => prev.map((column) => column.fill(0)));
+    setTimeout(() => {
+      Ships.map((_, i) =>
+        placeShipsRandom(Ships[i], opponentBoard, setOpponentBoard)
+      );
+      console.table(opponentBoard);
+    }, 5);
   }
 
   useEffect(() => {
@@ -59,8 +54,8 @@ const Game = () => {
   }, []);
 
   return (
-    <div>
-      <div className="container">
+    <div className="main-container">
+      <div className="game-container">
         <div className="grid-user battleship-grid">
           <Board board={playerBoard}></Board>
         </div>

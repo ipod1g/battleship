@@ -42,7 +42,13 @@
   --border-width: 5px;
 }
 
-.container {
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-container {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -69,8 +75,8 @@
 }
 
 .grid-computer {
-  font-size: 16px;
+  font-size: 22px;
   text-align: center;
-  color: red;
+  color: rgb(123, 0, 255);
   font-weight: 600;
 }
