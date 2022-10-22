@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Board from "../components/Board";
-import placeShipsRandom from "../functions/placeShipsRandom";
-import { Ship, ShipNames } from "../interfaces/types";
+import boardWithRandomlyPlacedShips from "../functions/boardWithRandomlyPlacedShips ";
+import { ShipNames } from "../interfaces/types";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
@@ -9,22 +9,12 @@ const Game = () => {
   const [opponentBoard, setOpponentBoard] = useState<number[][]>([]);
   const [playerBoard, setPlayerBoard] = useState<number[][]>([]);
 
-  const Ships: Ship[] = [
-    {
-      type: ShipNames["Destroyer"],
-    },
-    {
-      type: ShipNames["Submarine"],
-    },
-    {
-      type: ShipNames["Cruiser"],
-    },
-    {
-      type: ShipNames["Battleship"],
-    },
-    {
-      type: ShipNames["Carrier"],
-    },
+  const Ships = [
+    ShipNames.Destroyer,
+    ShipNames.Carrier,
+    ShipNames.Battleship,
+    ShipNames.Submarine,
+    ShipNames.Cruiser,
   ];
 
   const width = 10;
@@ -32,12 +22,13 @@ const Game = () => {
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
     setOpponentBoard((prev) => prev.map((column) => column.fill(0)));
-    setTimeout(() => {
-      Ships.map((_, i) =>
-        placeShipsRandom(Ships[i], opponentBoard, setOpponentBoard)
-      );
-      console.table(opponentBoard);
-    });
+    Ships.map((length) =>
+      setOpponentBoard(() =>
+        boardWithRandomlyPlacedShips(length, opponentBoard)
+      )
+    );
+
+    console.table(opponentBoard);
   }
 
   useEffect(() => {
