@@ -42,7 +42,13 @@
   --border-width: 5px;
 }
 
-.container {
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-container {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -66,4 +72,11 @@
 .placed {
   background-color: red;
   opacity: 0.5;
+}
+
+.grid-computer {
+  font-size: 22px;
+  text-align: center;
+  color: rgb(123, 0, 255);
+  font-weight: 600;
 }

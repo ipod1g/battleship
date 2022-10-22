@@ -8,10 +8,10 @@ export interface Board {
 const Board = (props: Board) => {
   return (
     <>
-      {props.board.map((row, i) => (
-        <div key={i} id={`row-${i}`}>
-          {row.map((value, j) => (
-            <div key={j} id={`column-${j}`}>
+      {props.board.map((column, i) => (
+        <div key={i} id={`column-${i}`}>
+          {column.map((value, j) => (
+            <div key={j} id={`row-${j}`}>
               {value}
             </div>
           ))}
