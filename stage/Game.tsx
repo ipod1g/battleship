@@ -6,7 +6,6 @@ import { Ship, ShipNames } from "../interfaces/types";
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
 const Game = () => {
-  const opponentRef = useRef<HTMLDivElement>(null);
   const [opponentBoard, setOpponentBoard] = useState<number[][]>([]);
   const [playerBoard, setPlayerBoard] = useState<number[][]>([]);
 
@@ -30,27 +29,27 @@ const Game = () => {
 
   const width = 10;
 
-  // make empty board for both players
-  function createBoard(): number[][] {
-    return Array(width)
-      .fill(0)
-      .map(() => Array(width).fill(0));
-  }
-
+  /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
-    //resets the board everytime this function is called
     setOpponentBoard((prev) => prev.map((column) => column.fill(0)));
     setTimeout(() => {
       Ships.map((_, i) =>
         placeShipsRandom(Ships[i], opponentBoard, setOpponentBoard)
       );
       console.table(opponentBoard);
-    }, 5);
+    });
   }
 
   useEffect(() => {
-    setOpponentBoard(() => createBoard());
-    setPlayerBoard(() => createBoard());
+    /** Make new width*width zero populated board for both players  */
+    function newBoard(): number[][] {
+      return Array(width)
+        .fill(0)
+        .map(() => Array(width).fill(0));
+    }
+
+    setOpponentBoard(() => newBoard());
+    setPlayerBoard(() => newBoard());
   }, []);
 
   return (
@@ -59,7 +58,7 @@ const Game = () => {
         <div className="grid-user battleship-grid">
           <Board board={playerBoard}></Board>
         </div>
-        <div className="grid-computer battleship-grid" ref={opponentRef}>
+        <div className="grid-computer battleship-grid">
           <Board board={opponentBoard}></Board>
         </div>
       </div>
