@@ -1,18 +1,13 @@
 /**Places ships from randomly generated coordinates that is not outside the grid or already occupied on any provided 10*10 grid*/
 const boardWithRandomlyPlacedShips = (
   shipLength: number,
-  Board: number[][],
+  board: number[][],
 ): number[][] => {
   const width = 10;
   const orientation =
     Math.round(Math.random()) >= 0.5 ? "horizontal" : "vertical";
-  console.log("running");
 
-
-  const updatedBoard = [...Board];
-  /** random column x between 0 to 9*/
   const x = Math.floor(Math.random() * width);
-  /** random row y between 0 to 9*/
   const y = Math.floor(Math.random() * width);
 
   /** True if the random x,y coordinate is outside the grid */
@@ -32,7 +27,7 @@ const boardWithRandomlyPlacedShips = (
 
     if (orientation === "horizontal") {
       for (let i = x; i < x + shipLength; i++) {
-        if (updatedBoard[i][y] !== 0) {
+        if (board[i][y] !== 0) {
           return false;
         }
       }
@@ -40,7 +35,7 @@ const boardWithRandomlyPlacedShips = (
 
     if (orientation === "vertical") {
       for (let j = y; j < y + shipLength; j++) {
-        if (updatedBoard[x][j] !== 0) {
+        if (board[x][j] !== 0) {
           return false;
         }
       }
@@ -54,20 +49,20 @@ const boardWithRandomlyPlacedShips = (
       console.log(
         `Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`
       );
-      updatedBoard[i][y] = shipLength;
+      board[i][y] = shipLength;
     }
   } else if (orientation === "vertical" && isLocationPlaceable(x, y)) {
     for (let j = y; j < y + shipLength; j++) {
       console.log(
         `Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`
       );
-      updatedBoard[x][j] = shipLength;
+      board[x][j] = shipLength;
     }
   } else {
     console.log("Re-running");
-    return boardWithRandomlyPlacedShips(shipLength, Board);
+    return boardWithRandomlyPlacedShips(shipLength, board);
   }
-  return updatedBoard;
+  return board;
 };
 
 export default boardWithRandomlyPlacedShips;
