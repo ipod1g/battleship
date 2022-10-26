@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Board from "../components/Board";
-import boardWithRandomlyPlacedShips from "../functions/boardWithRandomlyPlacedShips ";
+import boardWithRandomlyPlacedShips from "../functions/boardWithRandomlyPlacedShips";
 import { shipLength } from "../interfaces/types";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
