@@ -61,6 +61,7 @@
   background-color: rgba(45, 182, 182, 0.514);
   grid-template-rows: repeat(10, 4.6vmin);
   grid-template-columns: repeat(10, 4.6vmin);
+  z-index: 1;
 }
 
 .battleship-grid > div > div {
@@ -69,14 +70,71 @@
   width: 4.6vmin;
 }
 
-.placed {
+/* .placed {
   background-color: red;
   opacity: 0.5;
-}
+} */
 
-.grid-computer {
+.grid-computer, .grid-user {
   font-size: 22px;
   text-align: center;
   color: rgb(123, 0, 255);
   font-weight: 600;
+}
+
+.ships-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  gap: 20px;
+  width: 300px;
+}
+
+.ships-container > div {
+  text-align: center;
+  height: 4.6vmin;
+  width: 4.6vmin;
+  border: 1px solid red;
+  background-color: red;
+  /*hsla(0, 0%, 100%, .2)*/
+  z-index: 0;
+}
+
+/* Destroyer */
+#type-2--vertical {
+  height: calc(4.6vmin * 2);
+}
+#type-2--horizontal {
+  width: calc(4.6vmin * 2);
+}
+
+/* Submarine, */
+#type-3--vertical {
+  height: calc(4.6vmin * 3);
+}
+#type-3--horizontal {
+  width: calc(4.6vmin * 3);
+}
+/* Cruiser, */
+#type-3--vertical {
+  height: calc(4.6vmin * 3);
+}
+#type-3--horizontal {
+  width: calc(4.6vmin * 3);
+}
+
+/* Battleship, */
+#type-4--vertical {
+  height: calc(4.6vmin * 4);
+}
+#type-4--horizontal {
+  width: calc(4.6vmin * 4);
+}
+/* Carrier, */
+#type-5--vertical {
+  height: calc(4.6vmin * 5);
+}
+#type-5--horizontal {
+  width: calc(4.6vmin * 5);
 }
