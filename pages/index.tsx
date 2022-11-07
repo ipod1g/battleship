@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Board from "../lib/components/Board";
 import boardWithRandomlyPlacedShips from "../lib/functions/boardWithRandomlyPlacedShips";
 import { shipLength } from "../lib/interfaces/types";
@@ -24,6 +24,7 @@ const Home: NextPage = () => {
     false, // Battleship
     false, // Carrier
   ]);
+
   const shipLengths = [
     shipLength.Destroyer,
     shipLength.Submarine,
@@ -97,12 +98,6 @@ const Home: NextPage = () => {
     return board;
   }
 
-  // For debugging atm
-  useEffect(() => {
-    console.log("selected: " + shipLengths[selectedShipIndex]);
-    return () => {};
-  }, [selectedShipIndex]);
-
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
     setOpponentBoard(() => newBoard());
@@ -167,6 +162,9 @@ const Home: NextPage = () => {
                 onDragStart={() => {
                   setIsShipSelected(true);
                   setSelectedShipIndex(index);
+
+                  // For debugging atm
+                  console.log("selected: " + shipLengths[selectedShipIndex]);
                 }}
                 dragSnapToOrigin={true}
               ></motion.div>
