@@ -8,11 +8,12 @@ interface Props extends HTMLMotionProps<"div"> {
 }
 
 const Ship = (props: Props) => {
+  const { orientation, shipLength, index, ...motionDivProps } = props;
   const gridSize = "4.6vmin";
 
   return (
     <motion.div
-      {...props}
+      {...motionDivProps}
       drag
       whileDrag={{ scale: 1.1, opacity: 0.4 }}
       dragMomentum={false}
