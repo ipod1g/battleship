@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useState } from "react";
-import Game from "../stage/Game";
+import Game from "../lib/stage/Game";
 
 const Home: NextPage = () => {
   const [gameStatus, setGameStatus] = useState("started");

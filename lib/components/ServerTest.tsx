@@ -5,6 +5,10 @@ let socket: Socket;
 const ServerTest = () => {
   useEffect(() => {
     async function socketInit() {
+      // signals the server to create a socket
+      await fetch("http://localhost:3000/api/socket");
+
+      // connects to the socket
       socket = io("http://localhost:3000");
 
       socket.on("connect", () => {
