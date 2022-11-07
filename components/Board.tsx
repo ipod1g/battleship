@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export interface Board {
   board: number[][];
   orientation: string;
   isShipSelected: boolean;
-  setCurrentGridXLocation: React.Dispatch<
-    React.SetStateAction<number | undefined>
-  >;
-  setCurrentGridYLocation: React.Dispatch<
-    React.SetStateAction<number | undefined>
-  >;
+  setIsShipSelected: React.Dispatch<React.SetStateAction<boolean>>;
+  placeShip: (
+    board: number[][],
+    index: number,
+    x: number,
+    y: number
+  ) => number[][] | -1;
+  selectedShip: number;
 }
 
 /** Creates the board for placement and for the opponent */
@@ -17,21 +19,15 @@ const Board = (props: Board) => {
   return (
     <>
       {props.board.map((column, i) => (
-        <div
-          key={i}
-          id={`column-${i}`}
-          onMouseOverCapture={() => {
-            if (!props.isShipSelected) return;
-            else props.setCurrentGridXLocation(i);
-          }}
-        >
+        <div key={i} id={`column-${i}`}>
           {column.map((value, j) => (
             <div
               key={j}
               id={`row-${j}`}
-              onMouseOverCapture={() => {
+              onMouseUp={() => {
                 if (!props.isShipSelected) return;
-                else props.setCurrentGridYLocation(j);
+                props.placeShip(props.board, props.selectedShip, i, j);
+                props.setIsShipSelected(false);
               }}
             >
               {value}
