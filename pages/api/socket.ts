@@ -21,6 +21,7 @@ export default function handler(
   } else {
     console.log('Socket is initializing');
     const io = new IOServer(res.socket.server);
+
     res.socket.server.io = io;
 
     io.on('connection', socket => {

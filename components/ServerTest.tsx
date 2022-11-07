@@ -5,13 +5,10 @@ let socket: Socket;
 const ServerTest = () => {
   useEffect(() => {
     async function socketInit() {
-      const test = await fetch("/api/socket");
-      console.log("ayo", test);
-
-      socket = io();
+      socket = io("http://localhost:3000");
 
       socket.on("connect", () => {
-        console.log("connected");
+        console.log("Connected, connection id is ", socket.id);
       });
 
       socket.on("update-input", (msg) => {
@@ -20,6 +17,8 @@ const ServerTest = () => {
     }
 
     socketInit();
+
+    return () => {};
   }, []);
 
   return (
