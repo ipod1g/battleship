@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-
 import React, { useState, useEffect, useRef } from "react";
 import Board from "../lib/components/Board";
 import boardWithRandomlyPlacedShips from "../lib/functions/boardWithRandomlyPlacedShips";
@@ -7,14 +6,16 @@ import { shipLength } from "../lib/interfaces/types";
 import { motion } from "framer-motion";
 import ServerTest from "../lib/components/ServerTest";
 
+//Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
+
 const Home: NextPage = () => {
   const width = 10;
+  const gridSize = "4.6vmin";
   const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
   const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
   const [orientation, setOrientation] = useState("vertical");
   const [isShipSelected, setIsShipSelected] = useState(false);
-  const [currentGridXLocation, setCurrentGridXLocation] = useState<number>();
-  const [currentGridYLocation, setCurrentGridYLocation] = useState<number>();
+  const [selectedShipIndex, setSelectedShipIndex] = useState<number>(-1);
   const dragConstraintsRef = useRef(null);
   const [isShipPlaced, setIsShipPlaced] = useState([
     false, // Destroyer
@@ -46,15 +47,11 @@ const Home: NextPage = () => {
   /**Places down ship on drag ending point respective to the cursor position
    *
    * @param index is the index of selected Ship
+   * I am working with index here because there are 2 diff ships with same length of 3
    * @returns updated board after placement
    */
-  function placeShip(
-    board: number[][],
-    index: number,
-    x: number | undefined,
-    y: number | undefined
-  ) {
-    if (x === undefined || y === undefined) return;
+  function placeShip(board: number[][], index: number, x: number, y: number) {
+    if (x === -1 || y === -1) return -1;
     const xrange = x + shipLengths[index];
     const yrange = y + shipLengths[index];
 
@@ -84,13 +81,13 @@ const Home: NextPage = () => {
     };
 
     if (orientation === "horizontal" && isLocationPlaceable(x, y)) {
-      if (xrange > 10) return;
+      if (xrange > 10) return -1;
       for (x; x < xrange; x++) {
         board[x][y] = shipLengths[index];
         updateShipPlaced(index);
       }
     } else if (orientation === "vertical" && isLocationPlaceable(x, y)) {
-      if (yrange > 10) return;
+      if (yrange > 10) return -1;
       for (y; y < yrange; y++) {
         board[x][y] = shipLengths[index];
         updateShipPlaced(index);
@@ -102,9 +99,9 @@ const Home: NextPage = () => {
 
   // For debugging atm
   useEffect(() => {
-    console.log(isShipPlaced);
+    console.log("selected: " + shipLengths[selectedShipIndex]);
     return () => {};
-  }, [isShipPlaced]);
+  }, [selectedShipIndex]);
 
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
@@ -119,27 +116,29 @@ const Home: NextPage = () => {
   return (
     <div className="main-container" ref={dragConstraintsRef}>
       <div className="game-container">
-        <div className="grid-user battleship-grid">
+        <div className="grid-value battleship-grid">
           <Board
             board={playerBoard}
             orientation={orientation}
             isShipSelected={isShipSelected}
-            setCurrentGridXLocation={setCurrentGridXLocation}
-            setCurrentGridYLocation={setCurrentGridYLocation}
+            setIsShipSelected={setIsShipSelected}
+            placeShip={placeShip}
+            selectedShip={selectedShipIndex}
           ></Board>
         </div>
-
-        <div className="grid-computer battleship-grid">
+        {/* grid-value class for computer-side is for debugging (to view values) */}
+        <div className="grid-value battleship-grid">
           <Board
             board={opponentBoard}
             orientation={orientation}
             isShipSelected={false}
-            setCurrentGridXLocation={setCurrentGridXLocation}
-            setCurrentGridYLocation={setCurrentGridYLocation}
+            setIsShipSelected={setIsShipSelected}
+            placeShip={placeShip}
+            selectedShip={selectedShipIndex}
           ></Board>
         </div>
       </div>
-
+      {/* Placeholder function testing button */}
       <button
         style={{ height: "50px", width: "100px" }}
         onClick={() => handleStart()}
@@ -155,32 +154,26 @@ const Home: NextPage = () => {
             !isShipPlaced[index] && (
               <motion.div
                 drag
-                key={index}
                 id={`type-${shipLengths[index]}--${orientation}`}
+                key={index}
+                style={
+                  orientation === "vertical"
+                    ? { height: `calc( ${gridSize} * ${shipLength})` }
+                    : { width: `calc( ${gridSize} * ${shipLength})` }
+                }
                 whileDrag={{ scale: 1.1, opacity: 0.4 }}
                 dragConstraints={dragConstraintsRef}
                 dragMomentum={false}
                 onDragStart={() => {
                   setIsShipSelected(true);
-                }}
-                onDragEnd={() => {
-                  setIsShipSelected(false),
-                    placeShip(
-                      playerBoard,
-                      index,
-                      currentGridXLocation,
-                      currentGridYLocation
-                    );
+                  setSelectedShipIndex(index);
                 }}
                 dragSnapToOrigin={true}
-                onDrag={() =>
-                  console.log(currentGridXLocation, currentGridYLocation)
-                }
               ></motion.div>
             )
         )}
       </div>
-
+      {/* Placeholder function testing button */}
       <button
         style={{
           height: "50px",

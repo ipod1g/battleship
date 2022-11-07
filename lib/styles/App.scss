@@ -23,17 +23,7 @@
 }
 
 :root {
-  --bg-color: rgba(150, 150, 150, 1);
-
-  /* Square Colors:  background colors for the squares.*/
-  --color-0: #eaeaea;
-
-  /* Button Colors */
-  --button-color-t: rgba(200, 200, 200, 1);
-  --button-color-r: rgba(150, 150, 150, 1);
-  --button-color-b: rgba(120, 120, 120, 1);
-  --button-color-l: rgba(222, 222, 222, 1);
-
+  --bg-color: rgba(45, 182, 182, 0.514);
   /* Numbers define values that will be used throughout the CSS.
   --tile-size: 20px for example will set size of the grid squares. */
   --cols: 10;
@@ -57,8 +47,7 @@
 .battleship-grid {
   margin: 2vmin;
   display: grid;
-  /* background-color: hsl(200, 100%, 50%); */
-  background-color: rgba(45, 182, 182, 0.514);
+  background-color: var(--bg-color);
   grid-template-rows: repeat(10, 4.6vmin);
   grid-template-columns: repeat(10, 4.6vmin);
   z-index: 1;
@@ -70,12 +59,7 @@
   width: 4.6vmin;
 }
 
-/* .placed {
-  background-color: red;
-  opacity: 0.5;
-} */
-
-.grid-computer, .grid-user {
+.grid-value {
   font-size: 22px;
   text-align: center;
   color: rgb(123, 0, 255);
@@ -99,42 +83,4 @@
   background-color: red;
   /*hsla(0, 0%, 100%, .2)*/
   z-index: 0;
-}
-
-/* Destroyer */
-#type-2--vertical {
-  height: calc(4.6vmin * 2);
-}
-#type-2--horizontal {
-  width: calc(4.6vmin * 2);
-}
-
-/* Submarine, */
-#type-3--vertical {
-  height: calc(4.6vmin * 3);
-}
-#type-3--horizontal {
-  width: calc(4.6vmin * 3);
-}
-/* Cruiser, */
-#type-3--vertical {
-  height: calc(4.6vmin * 3);
-}
-#type-3--horizontal {
-  width: calc(4.6vmin * 3);
-}
-
-/* Battleship, */
-#type-4--vertical {
-  height: calc(4.6vmin * 4);
-}
-#type-4--horizontal {
-  width: calc(4.6vmin * 4);
-}
-/* Carrier, */
-#type-5--vertical {
-  height: calc(4.6vmin * 5);
-}
-#type-5--horizontal {
-  width: calc(4.6vmin * 5);
 }
