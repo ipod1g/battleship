@@ -3,14 +3,13 @@ import React, { useState, useRef } from "react";
 import Board from "../lib/components/Board";
 import boardWithRandomlyPlacedShips from "../lib/functions/boardWithRandomlyPlacedShips";
 import { shipLength } from "../lib/interfaces/types";
-import { motion } from "framer-motion";
 import ServerTest from "../lib/components/ServerTest";
+import Ship from "../lib/components/Ship";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
 const Home: NextPage = () => {
   const width = 10;
-  const gridSize = "4.6vmin";
   const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
   const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
   const [orientation, setOrientation] = useState("vertical");
@@ -147,27 +146,21 @@ const Home: NextPage = () => {
         {shipLengths.map(
           (shipLength, index) =>
             !isShipPlaced[index] && (
-              <motion.div
-                drag
-                id={`type-${shipLengths[index]}--${orientation}`}
+              <Ship
                 key={index}
-                style={
-                  orientation === "vertical"
-                    ? { height: `calc( ${gridSize} * ${shipLength})` }
-                    : { width: `calc( ${gridSize} * ${shipLength})` }
-                }
-                whileDrag={{ scale: 1.1, opacity: 0.4 }}
                 dragConstraints={dragConstraintsRef}
-                dragMomentum={false}
                 onDragStart={() => {
                   setIsShipSelected(true);
-                  setSelectedShipIndex(index);
-
+                  setSelectedShipIndex(() => {
+                    console.log("selected: ", index);
+                    return index;
+                  });
                   // For debugging atm
-                  console.log("selected: " + shipLengths[selectedShipIndex]);
                 }}
-                dragSnapToOrigin={true}
-              ></motion.div>
+                orientation={orientation}
+                shipLength={shipLength}
+                index={index}
+              />
             )
         )}
       </div>
