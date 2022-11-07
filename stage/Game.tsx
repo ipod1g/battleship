@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Board from "../components/Board";
 import boardWithRandomlyPlacedShips from "../functions/boardWithRandomlyPlacedShips ";
 import { shipLength } from "../interfaces/types";
 import { motion } from "framer-motion";
+import ServerTest from "../components/ServerTest";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
@@ -127,6 +128,7 @@ const Game = () => {
             setCurrentGridYLocation={setCurrentGridYLocation}
           ></Board>
         </div>
+
         <div className="grid-computer battleship-grid">
           <Board
             board={opponentBoard}
@@ -137,12 +139,16 @@ const Game = () => {
           ></Board>
         </div>
       </div>
+
       <button
         style={{ height: "50px", width: "100px" }}
         onClick={() => handleStart()}
       >
         Generate
       </button>
+
+      <ServerTest />
+
       <div className="ships-container">
         {shipLengths.map(
           (shipLength, index) =>
@@ -174,6 +180,7 @@ const Game = () => {
             )
         )}
       </div>
+
       <button
         style={{
           height: "50px",
