@@ -1,7 +1,7 @@
 /**Places ships from randomly generated coordinates that is not outside the grid or already occupied on any provided 10*10 grid*/
 const boardWithRandomlyPlacedShips = (
   shipLength: number,
-  board: number[][],
+  board: number[][]
 ): number[][] => {
   const width = 10;
   const orientation =
@@ -46,16 +46,12 @@ const boardWithRandomlyPlacedShips = (
   // Main task (placement) of the function
   if (orientation === "horizontal" && isLocationPlaceable(x, y)) {
     for (let i = x; i < x + shipLength; i++) {
-      console.log(
-        `Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`
-      );
+      console.log(`Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`);
       board[i][y] = shipLength;
     }
   } else if (orientation === "vertical" && isLocationPlaceable(x, y)) {
     for (let j = y; j < y + shipLength; j++) {
-      console.log(
-        `Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`
-      );
+      console.log(`Ship:${shipLength}, ${orientation} ${"\n"} x=${x}, y=${y}`);
       board[x][j] = shipLength;
     }
   } else {

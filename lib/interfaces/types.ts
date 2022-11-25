@@ -1,12 +1,3 @@
-export interface IStartProps {
-  handleStart: ([]) => void;
-}
-
-export interface IFinishedProps {
-  name: string;
-  restart: () => void;
-}
-
 export enum shipLength {
   Destroyer = 2,
   Submarine = 3,
@@ -14,3 +5,12 @@ export enum shipLength {
   Battleship = 4,
   Carrier = 5,
 }
+
+export type playerData = {
+  board: number[][];
+  shipInfo: {
+    shipType: string;
+    placed: boolean;
+    status: string;
+  }[];
+};
