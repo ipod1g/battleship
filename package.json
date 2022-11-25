@@ -1,21 +1,16 @@
 {
   "name": "battleship",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/SimHoZebs/battleship.git",
+  "author": "SimHoZebs <simhozebs@gmail.com>",
+  "license": "MIT",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "framer-motion": "^7.6.5",
-    "next": "13.0.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "sass": "^1.56.0",
-    "socket.io": "^4.5.3",
-    "socket.io-client": "^4.5.3"
+    "dev": "yarn workspace client dev"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
