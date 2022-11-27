@@ -11,6 +11,8 @@ const Ship = (props: Props) => {
   const { orientation, shipLength, index, ...motionDivProps } = props;
   const gridSize = "4.6vmin";
 
+  //Ship after releasing and clicking triggers the placing (need to fix later)
+
   return (
     <motion.div
       {...motionDivProps}
