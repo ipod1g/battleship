@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "dev": "yarn workspace client dev",
-    "server": "yarn workspace server start"
+    "server": "yarn workspace server start",
+    "tsc": "yarn workspace server tsc --watch"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
