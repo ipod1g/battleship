@@ -3,102 +3,35 @@ import React, { useState, useRef } from "react";
 import Board from "../lib/components/Board";
 import boardWithRandomlyPlacedShips from "../lib/functions/boardWithRandomlyPlacedShips";
 import { shipLength } from "../lib/interfaces/types";
-import ServerTest from "../lib/components/ServerTest";
+// import ServerTest from "../lib/components/ServerTest";
 import Ship from "../lib/components/Ship";
-import { useForceUpdate } from "framer-motion";
+import Starter from "../lib/sections/starter";
+import Game from "../lib/sections/game";
+import { initialData, shipLengths } from "../lib/constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
 const Home: NextPage = () => {
   const width = 10;
+  const [gameStart, setGameStart] = useState(false);
+
   const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
   const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
-  const [placementOrientation, setPlacementOrientation] = useState("vertical");
-  const [isShipSelected, setIsShipSelected] = useState(false);
-  const [gameStart, setGameStart] = useState(false);
-  const [selectedShipIndex, setSelectedShipIndex] = useState<number>(-1);
-  const dragConstraintsRef = useRef(null);
-
-  const shipLengths = [
-    shipLength.Destroyer,
-    shipLength.Submarine,
-    shipLength.Cruiser,
-    shipLength.Battleship,
-    shipLength.Carrier,
-  ];
 
   const [playerData, setPlayerData] = useState({
     board: playerBoard,
-    shipInfo: [
-      {
-        shipType: "destroyer",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "submarine",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "cruiser",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "battleship",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "carrier",
-        placed: false,
-        status: "",
-      },
-    ],
+    shipInfo: initialData,
   });
 
   const [opponentData, setOpponentData] = useState({
     board: opponentBoard,
-    shipInfo: [
-      {
-        shipType: "destroyer",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "submarine",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "cruiser",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "battleship",
-        placed: false,
-        status: "",
-      },
-      {
-        shipType: "carrier",
-        placed: false,
-        status: "",
-      },
-    ],
+    shipInfo: initialData,
   });
 
   function newBoard() {
     return Array(width)
       .fill(0)
       .map(() => Array(width).fill(0));
-  }
-
-  function rotateShips() {
-    return placementOrientation === "vertical"
-      ? setPlacementOrientation("horizontal")
-      : setPlacementOrientation("vertical");
   }
 
   /** Resets the board with zero populated array & places ships randomly on it */
@@ -118,100 +51,28 @@ const Home: NextPage = () => {
     console.table(opponentData.board);
   }
 
-  function handleReset() {
-    setPlayerData(() => {
-      let prev = { ...playerData };
-      prev.board = newBoard();
-      prev.shipInfo.map((info) => (info.placed = false));
-      return prev;
-    });
-  }
-
   return (
-    <div className="main-container" ref={dragConstraintsRef}>
-      <div className="game-container">
-        <div className="grid-value battleship-grid">
-          <Board
-            orientation={placementOrientation}
-            isShipSelected={isShipSelected}
-            setIsShipSelected={setIsShipSelected}
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={setPlayerData}
+    <div className="starter-container">
+      {!gameStart && (
+        <>
+          <Starter
+            setGameStart={setGameStart}
             playerData={playerData}
-            shipLengths={shipLengths}
-            gameStart={gameStart}
-          ></Board>
-        </div>
-        {/* grid-value class for computer-side is for debugging (to view values) */}
-        <div className="grid-value battleship-grid">
-          <Board
-            orientation={placementOrientation}
-            isShipSelected={false}
-            setIsShipSelected={setIsShipSelected}
-            selectedShipIndex={selectedShipIndex}
-            playerData={opponentData}
-            setPlayerData={setOpponentData}
-            shipLengths={shipLengths}
-            gameStart={gameStart}
-          ></Board>
-        </div>
-      </div>
-      <ServerTest />
-      <div className="ships-container">
-        {playerData.shipInfo.map(
-          (ship, index) =>
-            !ship.placed && (
-              <Ship
-                key={index}
-                dragConstraints={dragConstraintsRef}
-                onDragStart={() => {
-                  setIsShipSelected(true);
-                  setSelectedShipIndex(() => {
-                    // console.log("selected idx: ", index);
-                    console.log("name: ", playerData.shipInfo[index].shipType);
-                    return index;
-                  });
-                }}
-                orientation={placementOrientation}
-                shipLength={shipLengths[index]}
-                index={index}
-              />
-            )
-        )}
-      </div>
-      {/* Placeholder function testing button */}
-      <button
-        style={{
-          height: "50px",
-          width: "100px",
-          position: "absolute",
-          bottom: "40px",
-        }}
-        onClick={() => rotateShips()}
-      >
-        Rotate
-      </button>
-      {/* Placeholder function testing button */}
-      <button
-        style={
-          gameStart ? { display: "none" } : { height: "50px", width: "100px" }
-        }
-        onClick={() => handleStart()}
-      >
-        Start
-      </button>
-      <button
-        style={{
-          height: "50px",
-          width: "100px",
-          position: "absolute",
-          bottom: "40vh",
-          left: "150px",
-        }}
-        onClick={() => handleReset()}
-      >
-        Reset
-      </button>
+            opponentData={opponentData}
+            setPlayerData={setPlayerData}
+            setOpponentData={setOpponentData}
+          />
+          <button onClick={() => handleStart()}>Start</button>
+        </>
+      )}
+      {gameStart && (
+        <Game
+          playerData={playerData}
+          opponentData={opponentData}
+          setPlayerData={setPlayerData}
+          setOpponentData={setOpponentData}
+        />
+      )}
     </div>
   );
 };
