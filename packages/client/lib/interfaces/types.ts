@@ -11,6 +11,6 @@ export type playerData = {
   shipInfo: {
     shipType: string;
     placed: boolean;
-    status: string;
+    placedLocation: number[][];
   }[];
 };
