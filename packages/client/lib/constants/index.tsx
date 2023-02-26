@@ -4,27 +4,27 @@ export const initialData = [
   {
     shipType: "destroyer",
     placed: false,
-    status: "",
+    placedLocation: [],
   },
   {
     shipType: "submarine",
     placed: false,
-    status: "",
+    placedLocation: [],
   },
   {
     shipType: "cruiser",
     placed: false,
-    status: "",
+    placedLocation: [],
   },
   {
     shipType: "battleship",
     placed: false,
-    status: "",
+    placedLocation: [],
   },
   {
     shipType: "carrier",
     placed: false,
-    status: "",
+    placedLocation: [],
   },
 ];
 
