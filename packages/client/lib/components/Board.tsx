@@ -6,7 +6,7 @@ import placeShip from "../functions/placeShip";
 export interface Board {
   playerData: playerData;
   setPlayerData: React.Dispatch<React.SetStateAction<playerData>>;
-  selectedShipIndex: number | -1; // I want to make this optional too
+  selectedShipIndex: number; // I want to make this optional too
   setIsShipSelected?: React.Dispatch<React.SetStateAction<boolean>>;
   isShipSelected?: boolean;
   orientation?: "horizontal" | "vertical";

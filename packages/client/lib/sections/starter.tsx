@@ -44,7 +44,15 @@ const Starter = (props: Props) => {
       let prev = { ...props.playerData };
       prev.board = newBoard();
       prev.shipInfo.map(
-        (info) => ((info.placed = false), (info.placedLocation = []))
+        (info) => (
+          (info.placed = false),
+          (info.parts = [
+            {
+              hit: false,
+              location: [],
+            },
+          ])
+        )
       );
       console.log(prev);
       return prev;
@@ -102,7 +110,6 @@ const Starter = (props: Props) => {
                   onDragStart={() => {
                     setIsShipSelected(true);
                     setSelectedShipIndex(() => {
-                      // console.log("selected idx: ", index);
                       console.log(
                         "name: ",
                         props.playerData.shipInfo[index].shipType

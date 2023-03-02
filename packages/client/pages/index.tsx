@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, createContext, useMemo } from "react";
 import Board from "../lib/components/Board";
 import generateRandomPlacements from "../lib/functions/generateRandomPlacements";
 import { shipLength } from "../lib/interfaces/types";
@@ -11,12 +11,23 @@ import { initialData, shipLengths } from "../lib/constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
+// export const UserDataContext = createContext({
+//   playerData: {
+//     board: [[]],
+//     shipInfo: {
+//       shipType: "destroyer",
+//       placed: false,
+//       placedLocation: [],
+//     },
+//   },
+//   setPlayerData: (data: any) => {},
+// });
+
+// UserDataContext.displayName = "UserDataContext";
+
 const Home: NextPage = () => {
   const width = 10;
   const [gameStart, setGameStart] = useState(false);
-
-  // const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
-  // const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
 
   const [playerData, setPlayerData] = useState({
     board: newBoard(),
@@ -28,6 +39,8 @@ const Home: NextPage = () => {
     shipInfo: initialData,
   });
 
+  // const userdata = useMemo(() => ({ playerData, setPlayerData }), [playerData]);
+
   function newBoard() {
     return Array(width)
       .fill(0)
@@ -36,27 +49,9 @@ const Home: NextPage = () => {
 
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
-    // Can comment away the below condition if you want to debug
-    // if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
-    //   return alert("please place all ships");
-    // }
-
-    // setOpponentBoard(() => newBoard());
-    // shipLengths.map((length) => {
-    //   setOpponentData({
-    //     ...opponentData,
-    //     board: boardWithRandomlyPlacedShips(length, opponentBoard),
-    //   });
-    // });
-    // setGameStart(true);
-    // console.table(opponentData.board);
-
-    // shipLengths.map((length) => {
-    //   setPlayerData({
-    //     ...playerData,
-    //     board: boardWithRandomlyPlacedShips(length, playerBoard),
-    //   });
-    // });
+    if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
+      return alert("please place all ships");
+    }
 
     generateRandomPlacements(opponentData.board, setOpponentData);
     setGameStart(true);
@@ -65,7 +60,10 @@ const Home: NextPage = () => {
 
   return (
     <div className="starter-container">
-      {!gameStart && (
+      {/* <UserDataContext.Provider value={userdata}> */}
+      {/* {useMemo(
+          () => */}
+      {!gameStart ? (
         <>
           <Starter
             setGameStart={setGameStart}
@@ -76,8 +74,7 @@ const Home: NextPage = () => {
           />
           <button onClick={() => handleStart()}>Start</button>
         </>
-      )}
-      {gameStart && (
+      ) : (
         <Game
           playerData={playerData}
           opponentData={opponentData}
@@ -85,6 +82,9 @@ const Home: NextPage = () => {
           setOpponentData={setOpponentData}
         />
       )}
+      {/*, [] */}
+      {/* )} */}
+      {/* </UserDataContext.Provider> */}
     </div>
   );
 };

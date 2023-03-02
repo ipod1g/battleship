@@ -11,6 +11,9 @@ export type playerData = {
   shipInfo: {
     shipType: string;
     placed: boolean;
-    placedLocation: number[][];
+    parts: {
+      hit: boolean;
+      location: number[];
+    }[];
   }[];
 };

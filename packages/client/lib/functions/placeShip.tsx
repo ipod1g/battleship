@@ -53,12 +53,14 @@ const placeShip = (
     return true;
   };
 
-  /** Updates both the placedLocation and the board */
+  /** Updates both the placed locations and the board */
   const updateShipPlacement = (x: number, y: number) => {
+    console.log("updateShipPlacement ran" + x + "," + y);
     setPlayerData((prev) => {
       const updatedBoard = prev.board.map((row, i) => {
         if (i === x) {
-          return row.map((cell, j) => (j === y ? shipLengths[index] : cell));
+          // return row.map((cell, j) => (j === y ? shipLengths[index] : cell));
+          return row.map((cell, j) => (j === y ? index + 1 : cell));
         }
         return row;
       });
@@ -67,7 +69,11 @@ const placeShip = (
           ? {
               ...ship,
               placed: true,
-              placedLocation: [...ship.placedLocation, [x, y]],
+              // added filter here because of initial data having empty []
+              parts: [
+                ...ship.parts.filter((part) => part.location.length > 0),
+                { hit: false, location: [x, y] },
+              ],
             }
           : ship
       );
