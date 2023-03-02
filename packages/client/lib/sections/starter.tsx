@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
 import React, { useState, useRef } from "react";
 import Board from "../components/Board";
-import boardWithRandomlyPlacedShips from "../functions/boardWithRandomlyPlacedShips";
+import boardWithRandomlyPlacedShips from "../functions/generateRandomPlacements";
 import { playerData } from "../interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
 import Ship from "../components/Ship";
-import { shipLengths } from "../constants";
+import { initialData, shipLengths } from "../constants";
+import generateRandomPlacements from "../functions/generateRandomPlacements";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
@@ -19,7 +20,9 @@ export interface Props {
 
 const Starter = (props: Props) => {
   const width = 10;
-  const [placementOrientation, setPlacementOrientation] = useState("vertical");
+  const [placementOrientation, setPlacementOrientation] = useState<
+    "vertical" | "horizontal"
+  >("vertical");
   const [isShipSelected, setIsShipSelected] = useState(false);
   const [selectedShipIndex, setSelectedShipIndex] = useState<number>(-1);
   const dragConstraintsRef = useRef(null);
@@ -40,16 +43,20 @@ const Starter = (props: Props) => {
     props.setPlayerData(() => {
       let prev = { ...props.playerData };
       prev.board = newBoard();
-      prev.shipInfo.map((info) => (info.placed = false));
+      prev.shipInfo.map(
+        (info) => ((info.placed = false), (info.placedLocation = []))
+      );
+      console.log(prev);
       return prev;
     });
   }
 
-  // add updater for board ?
+  function randomPlacement() {
+    handleReset();
+    generateRandomPlacements(props.playerData.board, props.setPlayerData);
+  }
 
   //stored in server?
-  const [userFireLocation, setUserFireLocation] = useState<number[]>([-1, -1]);
-  const [userTurn, setUserTurn] = useState(true);
 
   return (
     <div className="main-container" ref={dragConstraintsRef}>
@@ -72,13 +79,16 @@ const Starter = (props: Props) => {
           <button
             className="temp-button"
             onClick={() => {
-              rotateShips(), console.log(userFireLocation);
+              rotateShips();
             }}
           >
             Rotate
           </button>
           <button className="temp-button" onClick={() => handleReset()}>
             Reset
+          </button>
+          <button className="temp-button" onClick={() => randomPlacement()}>
+            Random
           </button>
         </div>
         {/* asd */}
