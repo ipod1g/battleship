@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import React, { useState, useRef } from "react";
 import Board from "../lib/components/Board";
-import boardWithRandomlyPlacedShips from "../lib/functions/boardWithRandomlyPlacedShips";
+import generateRandomPlacements from "../lib/functions/generateRandomPlacements";
 import { shipLength } from "../lib/interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
 import Ship from "../lib/components/Ship";
@@ -15,16 +15,16 @@ const Home: NextPage = () => {
   const width = 10;
   const [gameStart, setGameStart] = useState(false);
 
-  const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
-  const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
+  // const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
+  // const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
 
   const [playerData, setPlayerData] = useState({
-    board: playerBoard,
+    board: newBoard(),
     shipInfo: initialData,
   });
 
   const [opponentData, setOpponentData] = useState({
-    board: opponentBoard,
+    board: newBoard(),
     shipInfo: initialData,
   });
 
@@ -37,18 +37,30 @@ const Home: NextPage = () => {
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
     // Can comment away the below condition if you want to debug
-    if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
-      return alert("please place all ships");
-    }
-    setOpponentBoard(() => newBoard());
-    shipLengths.map((length) => {
-      setOpponentData({
-        ...opponentData,
-        board: boardWithRandomlyPlacedShips(length, opponentBoard),
-      });
-    });
+    // if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
+    //   return alert("please place all ships");
+    // }
+
+    // setOpponentBoard(() => newBoard());
+    // shipLengths.map((length) => {
+    //   setOpponentData({
+    //     ...opponentData,
+    //     board: boardWithRandomlyPlacedShips(length, opponentBoard),
+    //   });
+    // });
+    // setGameStart(true);
+    // console.table(opponentData.board);
+
+    // shipLengths.map((length) => {
+    //   setPlayerData({
+    //     ...playerData,
+    //     board: boardWithRandomlyPlacedShips(length, playerBoard),
+    //   });
+    // });
+
+    generateRandomPlacements(opponentData.board, setOpponentData);
     setGameStart(true);
-    console.table(opponentData.board);
+    console.table(playerData.board);
   }
 
   return (
