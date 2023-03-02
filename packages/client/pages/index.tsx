@@ -5,8 +5,8 @@ import generateRandomPlacements from "../lib/functions/generateRandomPlacements"
 import { shipLength } from "../lib/interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
 import Ship from "../lib/components/Ship";
-import Starter from "../lib/sections/starter";
-import Game from "../lib/sections/game";
+import Starter from "../lib/sections/Starter";
+import Game from "../lib/sections/Game";
 import { initialData, shipLengths } from "../lib/constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
