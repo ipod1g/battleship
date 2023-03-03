@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import React, { useState, useRef } from "react";
 import Board from "../components/Board";
-import boardWithRandomlyPlacedShips from "../functions/generateRandomPlacements";
 import { playerData } from "../interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
 import Ship from "../components/Ship";

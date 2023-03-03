@@ -1,5 +1,5 @@
 import { initialData, shipLengths } from "../constants";
-import { playerData, ShipInfo, shipLength } from "../interfaces/types";
+import { playerData, ShipInfo } from "../interfaces/types";
 import placeShip from "./placeShip";
 
 /**Places ships from randomly generated coordinates that is not outside the grid or already occupied on any provided 10*10 grid*/

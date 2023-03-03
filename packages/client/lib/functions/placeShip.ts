@@ -1,5 +1,4 @@
-import React from "react";
-import { playerData, ShipInfo, ShipPart } from "../interfaces/types";
+import { playerData, ShipPart } from "../interfaces/types";
 import { shipLengths } from "../constants";
 import { shipsInCoord } from "./shipsInCoord";
 
