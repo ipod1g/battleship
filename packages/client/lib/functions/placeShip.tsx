@@ -1,24 +1,26 @@
 import React from "react";
-import { playerData } from "../interfaces/types";
+import { playerData, ShipInfo, ShipPart } from "../interfaces/types";
 import { shipLengths } from "../constants";
+import { shipsInCoord } from "./shipsInCoord";
 
 /**Places down ship on drag ending point respective to the cursor position
  *
- * @param index is the index of selected Ship
+ * @param selectedShipIndex is the index of selected Ship
  * Working with index here because there are 2 diff ships with same length of 3
  * @returns updated board: number[][] after placement
  */
 const placeShip = (
-  board: number[][],
-  index: number | -1,
-  x: number,
-  y: number,
-  orientation: "horizontal" | "vertical" | undefined,
-  setPlayerData: React.Dispatch<React.SetStateAction<playerData>>
+  selectedShipIndex: number | -1,
+  cellCoords: number[],
+  orientation: "horizontal" | "vertical",
+  shipInfo: playerData["shipInfo"]
 ) => {
-  //   if (x === -1 || y === -1) return -1;
-  const xrange = x + shipLengths[index];
-  const yrange = y + shipLengths[index];
+  // Create a deep copy of shipInfo to avoid mutating state
+
+  const shipLength = shipLengths[selectedShipIndex];
+  const [x, y] = cellCoords;
+  const xrange = x + shipLength;
+  const yrange = y + shipLength;
 
   const goesOutsideGrid = () => {
     if (orientation === "horizontal" && xrange > 10) {
@@ -29,67 +31,53 @@ const placeShip = (
       console.log("goesOutsideGrid");
       return true;
     }
-    return false;
+    return undefined;
   };
 
   /** True if neighbouring x or y + ... ship length coordinates is not occupied + !isOutsideGrid */
   const isLocationPlaceable = (x: number, y: number) => {
-    if (goesOutsideGrid()) return false;
-
     if (orientation === "horizontal") {
       for (let i = x; i < xrange; i++) {
-        if (board[i][y] !== 0) {
-          return false;
+        console.log("Checking for ship at " + i + ", " + y);
+        const foundShips = shipsInCoord(shipInfo, [i, y]);
+        if (foundShips) {
+          console.log("shipsFound", foundShips);
+          return undefined;
         }
       }
-    }
-    if (orientation === "vertical") {
+    } else {
       for (let j = y; j < yrange; j++) {
-        if (board[x][j] !== 0) {
-          return false;
+        const foundShips = shipsInCoord(shipInfo, [x, j]);
+        if (foundShips) {
+          console.log("shipsFound", foundShips);
+
+          return undefined;
         }
       }
     }
+
     return true;
   };
 
-  /** Updates both the placedLocation and the board */
-  const updateShipPlacement = (x: number, y: number) => {
-    setPlayerData((prev) => {
-      const updatedBoard = prev.board.map((row, i) => {
-        if (i === x) {
-          return row.map((cell, j) => (j === y ? shipLengths[index] : cell));
-        }
-        return row;
-      });
-      const updatedShipInfo = prev.shipInfo.map((ship, i) =>
-        i === index
-          ? {
-              ...ship,
-              placed: true,
-              placedLocation: [...ship.placedLocation, [x, y]],
-            }
-          : ship
-      );
-      return { ...prev, board: updatedBoard, shipInfo: updatedShipInfo };
-    });
-  };
-
-  if (orientation === "horizontal" && isLocationPlaceable(x, y)) {
-    if (xrange > 10) return -1;
-    for (x; x < xrange; x++) {
-      updateShipPlacement(x, y);
-    }
-  } else if (orientation === "vertical" && isLocationPlaceable(x, y)) {
-    if (yrange > 10) return -1;
-    for (y; y < yrange; y++) {
-      updateShipPlacement(x, y);
-    }
+  if (goesOutsideGrid() || !isLocationPlaceable(x, y)) {
+    console.log("PLACABLE: " + false);
+    return undefined;
   }
 
-  console.log("PLACABLE: " + isLocationPlaceable(x, y));
+  const partArray: ShipPart[] = Array(shipLength);
 
-  return isLocationPlaceable(x, y) ? board : false;
+  for (let i = 0; i < shipLength; i++) {
+    partArray[i] = {
+      location: orientation === "horizontal" ? [x + i, y] : [x, y + i],
+      hit: false,
+    };
+  }
+
+  shipInfo[selectedShipIndex].partArray = partArray;
+  shipInfo[selectedShipIndex].placed = true;
+
+  console.log("PLACABLE: " + true);
+  return shipInfo;
 };
 
 export default placeShip;

@@ -6,11 +6,17 @@ export enum shipLength {
   Carrier = 5,
 }
 
+export type ShipPart = {
+  location: number[];
+  hit: boolean;
+};
+
+export type ShipInfo = {
+  shipType: string;
+  placed: boolean;
+  partArray: ShipPart[];
+};
+
 export type playerData = {
-  board: number[][];
-  shipInfo: {
-    shipType: string;
-    placed: boolean;
-    placedLocation: number[][];
-  }[];
+  shipInfo: ShipInfo[];
 };

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { playerData } from "../interfaces/types";
-import { shipLengths } from "../constants";
-import placeShip from "../functions/placeShip";
+import Cell from "./Cell";
 
 export interface Board {
   playerData: playerData;
@@ -25,38 +24,42 @@ const Board = (props: Board) => {
   }, []);
 
   return (
-    <>
-      {props.playerData.board.map((column, i) => (
-        <div key={i} id={`column-${i}`}>
-          {column.map((value, j) => (
-            <div
-              key={j}
-              id={`row-${j}`}
-              onMouseUp={() => {
-                if (!props.isShipSelected || !props.setIsShipSelected) return;
-                placeShip(
-                  props.playerData.board,
-                  props.selectedShipIndex,
-                  i,
-                  j,
-                  props.orientation,
-                  props.setPlayerData
+    <div className="grid-value battleship-grid">
+      {Array(10)
+        .fill(0)
+        .map((val, i) => (
+          <div key={i} id={`column-${i}`}>
+            {Array(10)
+              .fill(0)
+              .map((val, j) => {
+                const test = props.playerData.shipInfo.find(
+                  (ship) =>
+                    ship.placed &&
+                    ship.partArray.find(
+                      (part) => part.location[0] === i && part.location[1] === j
+                    )
                 );
-                props.setIsShipSelected(false);
-              }}
-              onMouseDown={() => {
-                // This is to prevent type error of null provoke
-                if (!props.setUserFireLocation || !props.setUserTurn) return;
-                //send clicked coord to a function that checks
-                props.setUserFireLocation([i, j]);
-              }}
-            >
-              {value}
-            </div>
-          ))}
-        </div>
-      ))}
-    </>
+
+                return (
+                  <Cell
+                    key={j}
+                    playerData={props.playerData}
+                    setPlayerData={props.setPlayerData}
+                    selectedShipIndex={props.selectedShipIndex}
+                    setIsShipSelected={props.setIsShipSelected}
+                    isShipSelected={props.isShipSelected}
+                    orientation={props.orientation}
+                    setUserTurn={props.setUserTurn}
+                    setUserFireLocation={props.setUserFireLocation}
+                    coords={[i, j]}
+                  >
+                    {test ? test.partArray.length : 0}
+                  </Cell>
+                );
+              })}
+          </div>
+        ))}
+    </div>
   );
 };
 
