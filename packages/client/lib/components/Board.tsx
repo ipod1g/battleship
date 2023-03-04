@@ -15,14 +15,6 @@ export interface Board {
 
 /** Creates the board for placement and for the opponent */
 const Board = (props: Board) => {
-  // Update board after every fire trigger
-
-  useEffect(() => {
-    console.log("update");
-
-    return () => {};
-  }, []);
-
   return (
     <div className="grid-value battleship-grid">
       {Array(10)
@@ -53,7 +45,15 @@ const Board = (props: Board) => {
                     setUserFireLocation={props.setUserFireLocation}
                     coords={[i, j]}
                   >
-                    {test ? test.partArray.length : 0}
+                    {/* {test ? test.partArray.length : 0} */}
+                    {test
+                      ? test.partArray.find(
+                          (part) =>
+                            part.location[0] === i && part.location[1] === j
+                        )?.hit
+                        ? `-${props.playerData.shipInfo.indexOf(test) + 1}`
+                        : `${props.playerData.shipInfo.indexOf(test) + 1}`
+                      : 0}
                   </Cell>
                 );
               })}
