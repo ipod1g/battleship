@@ -21,11 +21,11 @@ const Game = (props: Props) => {
   const [userFireLocation, setUserFireLocation] = useState<number[]>([-1, -1]);
   const [userTurn, setUserTurn] = useState(true);
 
-  /** Update board array after checking with ship's parts locations */
+  /** Update board array after checking with ship's partArray locations */
   function updateHit(
     location: number[],
-    userData: playerData,
-    setData: React.Dispatch<React.SetStateAction<playerData>>
+    playerData: playerData,
+    setPlayerData: React.Dispatch<React.SetStateAction<playerData>>
   ) {
     // condition for userturn
 
@@ -35,26 +35,26 @@ const Game = (props: Props) => {
     // If location already shot, alert pick another location
 
     // const hitStatus = checkHit(location, props.playerData);
-    const { partIndex, shipHit } = checkHit(location, userData);
-    console.log("partIndex of the ship: " + partIndex);
+    const { shipPart, shipHit } = checkHit(location, playerData);
+    console.log("shipPart: " + shipPart);
     console.log("shipType hit: " + shipHit);
 
     // IF MISS
-    if (partIndex === -1) {
+    if (shipPart === -1) {
       //first number as row
       console.log("miss");
 
       // Make this piece of code reusable -> updates board and placedlocation
-      setData((prev) => {
-        const updatedBoard = prev.board.map((row, i) => {
-          if (i === x) {
-            // -9 is the missed shots
-            return row.map((cell, j) => (j === y ? -9 : cell));
-          }
-          return row;
-        });
+      setPlayerData((prev) => {
+        // const updatedBoard = prev.board.map((row, i) => {
+        //   if (i === x) {
+        //     // -9 is the missed shots
+        //     return row.map((cell, j) => (j === y ? -9 : cell));
+        //   }
+        //   return row;
+        // });
         // const updatedMissedShotsArray = prev.shipInfo.map((ship, i) =>
-        //   i === partIndex
+        //   i === shipPart
         //     ? {
         //         ...ship,
         //         placedLocation: [...ship.placedLocation, [-1, -1]],
@@ -63,27 +63,27 @@ const Game = (props: Props) => {
         // );
         return {
           ...prev,
-          board: updatedBoard,
+          // board: updatedBoard,
           // shipInfo: updatedMissedShotsArray,
         };
       });
     } else {
       console.log(
-        props.playerData.shipInfo[shipHit]?.shipType + "-" + partIndex
+        props.playerData.shipInfo[shipHit]?.shipType + "-" + shipPart
       );
 
-      setData((prev) => {
-        const updatedBoard = prev.board.map((row, i) => {
-          if (i === x) {
-            return row.map((cell, j) => (j === y ? -cell : cell));
-          }
-          return row;
-        });
+      setPlayerData((prev) => {
+        //   const updatedBoard = prev.board.map((row, i) => {
+        //     if (i === x) {
+        //       return row.map((cell, j) => (j === y ? -cell : cell));
+        //     }
+        //     return row;
+        //   });
 
-        prev.shipInfo[shipHit].parts[partIndex].hit = true;
+        prev.shipInfo[shipHit].partArray[shipPart].hit = true;
 
         console.log("PLZ: " + JSON.stringify(prev.shipInfo));
-        return { ...prev, board: updatedBoard, shipInfo: prev.shipInfo };
+        return { ...prev, shipInfo: prev.shipInfo };
       });
     }
   }
@@ -94,12 +94,12 @@ const Game = (props: Props) => {
   function checkHit(checkLocation: number[], board: playerData) {
     const shipPartAndShipType = board.shipInfo.reduce(
       (result, info, shipType) => {
-        const index = info.parts.findIndex(
+        const shipPart = info.partArray.findIndex(
           (part) =>
             JSON.stringify(part.location) === JSON.stringify(checkLocation)
         );
-        if (index >= 0) {
-          result = [index, shipType];
+        if (shipPart >= 0) {
+          result = [shipPart, shipType];
         }
         return result;
       },
@@ -107,7 +107,7 @@ const Game = (props: Props) => {
     );
 
     return {
-      partIndex: shipPartAndShipType[0],
+      shipPart: shipPartAndShipType[0],
       shipHit: shipPartAndShipType[1],
     };
   }
@@ -137,24 +137,21 @@ const Game = (props: Props) => {
   return (
     <div className="main-container">
       <div className="game-container">
-        <div className="grid-value battleship-grid">
-          <Board
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={props.setPlayerData}
-            playerData={props.playerData}
-            setUserTurn={setUserTurn}
-            setUserFireLocation={setUserFireLocation}
-          ></Board>
-        </div>
-        <div className="grid-value battleship-grid">
-          <Board
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={props.setOpponentData}
-            playerData={props.opponentData}
-            setUserTurn={setUserTurn}
-            setUserFireLocation={setUserFireLocation}
-          ></Board>
-        </div>
+        <Board
+          selectedShipIndex={selectedShipIndex}
+          setPlayerData={props.setPlayerData}
+          playerData={props.playerData}
+          setUserTurn={setUserTurn}
+          setUserFireLocation={setUserFireLocation}
+        />
+
+        <Board
+          selectedShipIndex={selectedShipIndex}
+          setPlayerData={props.setOpponentData}
+          playerData={props.opponentData}
+          setUserTurn={setUserTurn}
+          setUserFireLocation={setUserFireLocation}
+        />
       </div>
       {/* <ServerTest /> */}
     </div>

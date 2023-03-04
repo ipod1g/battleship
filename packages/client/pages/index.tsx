@@ -9,20 +9,6 @@ import { initialData } from "../lib/constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
-// export const UserDataContext = createContext({
-//   playerData: {
-//     board: [[]],
-//     shipInfo: {
-//       shipType: "destroyer",
-//       placed: false,
-//       placedLocation: [],
-//     },
-//   },
-//   setPlayerData: (data: any) => {},
-// });
-
-// UserDataContext.displayName = "UserDataContext";
-
 const Home: NextPage = () => {
   const width = 10;
   const [gameStart, setGameStart] = useState(false);
@@ -40,9 +26,9 @@ const Home: NextPage = () => {
 
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
-    // if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
-    //   return alert("please place all ships");
-    // }
+    if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
+      return alert("please place all ships");
+    }
 
     // setOpponentBoard(() => newBoard());
     // shipLengths.map((length) => {
@@ -67,9 +53,6 @@ const Home: NextPage = () => {
 
   return (
     <div className="starter-container">
-      {/* <UserDataContext.Provider value={userdata}> */}
-      {/* {useMemo(
-          () => */}
       {!gameStart ? (
         <>
           <Starter
@@ -89,9 +72,6 @@ const Home: NextPage = () => {
           setOpponentData={setOpponentData}
         />
       )}
-      {/*, [] */}
-      {/* )} */}
-      {/* </UserDataContext.Provider> */}
     </div>
   );
 };
