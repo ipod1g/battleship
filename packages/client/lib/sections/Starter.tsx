@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import React, { useState, useRef } from "react";
 import Board from "../components/Board";
-import boardWithRandomlyPlacedShips from "../functions/generateRandomPlacements";
 import { playerData } from "../interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
 import Ship from "../components/Ship";
@@ -42,18 +41,18 @@ const Starter = (props: Props) => {
   function handleReset() {
     props.setPlayerData(() => {
       let prev = { ...props.playerData };
-      prev.board = newBoard();
       prev.shipInfo.map(
-        (info) => ((info.placed = false), (info.placedLocation = []))
+        (info) => ((info.placed = false), (info.partArray = []))
       );
       console.log(prev);
       return prev;
     });
   }
+  // console.table(playerData.board);
 
   function randomPlacement() {
     handleReset();
-    generateRandomPlacements(props.playerData.board, props.setPlayerData);
+    generateRandomPlacements(props.setPlayerData, props.playerData);
   }
 
   //stored in server?
@@ -61,16 +60,14 @@ const Starter = (props: Props) => {
   return (
     <div className="main-container" ref={dragConstraintsRef}>
       <div className="game-container">
-        <div className="grid-value battleship-grid">
-          <Board
-            orientation={placementOrientation}
-            isShipSelected={isShipSelected}
-            setIsShipSelected={setIsShipSelected}
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={props.setPlayerData}
-            playerData={props.playerData}
-          ></Board>
-        </div>
+        <Board
+          orientation={placementOrientation}
+          isShipSelected={isShipSelected}
+          setIsShipSelected={setIsShipSelected}
+          selectedShipIndex={selectedShipIndex}
+          setPlayerData={props.setPlayerData}
+          playerData={props.playerData}
+        />
       </div>
 
       {/* <ServerTest /> */}

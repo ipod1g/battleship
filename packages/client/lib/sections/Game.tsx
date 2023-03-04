@@ -1,11 +1,7 @@
-import type { NextPage } from "next";
 import React, { useState, useRef, useEffect } from "react";
 import Board from "../components/Board";
-import boardWithRandomlyPlacedShips from "../functions/generateRandomPlacements";
 import { playerData } from "../interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
-import Ship from "../components/Ship";
-import { shipLengths } from "../constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
@@ -25,8 +21,8 @@ const Game = (props: Props) => {
   /** update board array after checking with placed location */
   function updateHit(
     location: number[],
-    userData: playerData,
-    setData: React.Dispatch<React.SetStateAction<playerData>>
+    playerData: playerData,
+    setPlayerData: React.Dispatch<React.SetStateAction<playerData>>
   ) {
     // condition for userturn
 
@@ -36,23 +32,24 @@ const Game = (props: Props) => {
     // If location already shot, alert pick another location
 
     // const hitStatus = checkHit(location, props.playerData);
-    const { index, shipHit } = checkHit(location, userData);
+    const { index, shipHit } = checkHit(location, playerData);
     console.log("index of the placedLocation: " + index);
     console.log("shipType hit: " + shipHit);
 
     // IF MISS
+
     if (index === -1) {
       //first number as row
       console.log("miss");
 
       // Make this piece of code reusable -> updates board and placedlocation
-      setData((prev) => {
-        const updatedBoard = prev.board.map((row, i) => {
-          if (i === x) {
-            return row.map((cell, j) => (j === y ? -1 : cell));
-          }
-          return row;
-        });
+      setPlayerData((prev) => {
+        // const updatedBoard = prev.board.map((row, i) => {
+        //   if (i === x) {
+        //     return row.map((cell, j) => (j === y ? -1 : cell));
+        //   }
+        //   return row;
+        // });
         // const updatedMissedShotsArray = prev.shipInfo.map((ship, i) =>
         //   i === index
         //     ? {
@@ -63,25 +60,24 @@ const Game = (props: Props) => {
         // );
         return {
           ...prev,
-          board: updatedBoard,
           // shipInfo: updatedMissedShotsArray,
         };
       });
     } else {
       console.log(props.playerData.shipInfo[shipHit]?.shipType + "-" + index);
 
-      setData((prev) => {
-        const updatedBoard = prev.board.map((row, i) => {
-          if (i === x) {
-            return row.map((cell, j) => (j === y ? -9 : cell));
-          }
-          return row;
-        });
+      setPlayerData((prev) => {
+        // const updatedBoard = prev.board.map((row, i) => {
+        //   if (i === x) {
+        //     return row.map((cell, j) => (j === y ? -9 : cell));
+        //   }
+        //   return row;
+        // });
 
-        prev.shipInfo[shipHit].placedLocation[index] = [-x, -y];
+        // prev.shipInfo[shipHit].placedLocation[index] = [-x, -y];
 
         console.log("PLZ: " + JSON.stringify(prev.shipInfo));
-        return { ...prev, board: updatedBoard, shipInfo: prev.shipInfo };
+        return { ...prev, shipInfo: prev.shipInfo };
       });
     }
   }
@@ -92,7 +88,7 @@ const Game = (props: Props) => {
   function checkHit(location: number[], board: playerData) {
     const indexAndShipType = board.shipInfo.reduce(
       (result, info, shipType) => {
-        const index = info.placedLocation.findIndex(
+        const index = info.partArray.findIndex(
           (locations) => JSON.stringify(locations) === JSON.stringify(location)
         );
         if (index >= 0) {
@@ -131,24 +127,21 @@ const Game = (props: Props) => {
   return (
     <div className="main-container">
       <div className="game-container">
-        <div className="grid-value battleship-grid">
-          <Board
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={props.setPlayerData}
-            playerData={props.playerData}
-            setUserTurn={setUserTurn}
-            setUserFireLocation={setUserFireLocation}
-          ></Board>
-        </div>
-        <div className="grid-value battleship-grid">
-          <Board
-            selectedShipIndex={selectedShipIndex}
-            setPlayerData={props.setOpponentData}
-            playerData={props.opponentData}
-            setUserTurn={setUserTurn}
-            setUserFireLocation={setUserFireLocation}
-          ></Board>
-        </div>
+        <Board
+          selectedShipIndex={selectedShipIndex}
+          setPlayerData={props.setPlayerData}
+          playerData={props.playerData}
+          setUserTurn={setUserTurn}
+          setUserFireLocation={setUserFireLocation}
+        />
+
+        <Board
+          selectedShipIndex={selectedShipIndex}
+          setPlayerData={props.setOpponentData}
+          playerData={props.opponentData}
+          setUserTurn={setUserTurn}
+          setUserFireLocation={setUserFireLocation}
+        />
       </div>
       {/* <ServerTest /> */}
     </div>
