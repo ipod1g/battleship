@@ -1,13 +1,11 @@
 import type { NextPage } from "next";
-import React, { useState, useRef, createContext, useMemo } from "react";
-import Board from "../lib/components/Board";
+import React, { useState } from "react";
 import generateRandomPlacements from "../lib/functions/generateRandomPlacements";
-import { shipLength } from "../lib/interfaces/types";
+import { playerData } from "../lib/interfaces/types";
 // import ServerTest from "../lib/components/ServerTest";
-import Ship from "../lib/components/Ship";
-import Starter from "../lib/sections/starter";
-import Game from "../lib/sections/game";
-import { initialData, shipLengths } from "../lib/constants";
+import Starter from "../lib/sections/Starter";
+import Game from "../lib/sections/Game";
+import { initialData } from "../lib/constants";
 
 //Conditions 'Sunk' | 'Hit' | 'Miss' | 'Ship' | 'Empty'
 
@@ -29,33 +27,42 @@ const Home: NextPage = () => {
   const width = 10;
   const [gameStart, setGameStart] = useState(false);
 
-  const [playerData, setPlayerData] = useState({
-    board: newBoard(),
+  // const [playerBoard, setPlayerBoard] = useState<number[][]>(newBoard());
+  // const [opponentBoard, setOpponentBoard] = useState<number[][]>(newBoard());
+
+  const [playerData, setPlayerData] = useState<playerData>({
     shipInfo: initialData,
   });
 
-  const [opponentData, setOpponentData] = useState({
-    board: newBoard(),
+  const [opponentData, setOpponentData] = useState<playerData>({
     shipInfo: initialData,
   });
-
-  // const userdata = useMemo(() => ({ playerData, setPlayerData }), [playerData]);
-
-  function newBoard() {
-    return Array(width)
-      .fill(0)
-      .map(() => Array(width).fill(0));
-  }
 
   /** Resets the board with zero populated array & places ships randomly on it */
   function handleStart() {
-    if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
-      return alert("please place all ships");
-    }
+    // if (!playerData.shipInfo.every((ship) => ship.placed === true)) {
+    //   return alert("please place all ships");
+    // }
 
-    generateRandomPlacements(opponentData.board, setOpponentData);
+    // setOpponentBoard(() => newBoard());
+    // shipLengths.map((length) => {
+    //   setOpponentData({
+    //     ...opponentData,
+    //     board: boardWithRandomlyPlacedShips(length, opponentBoard),
+    //   });
+    // });
+    // setGameStart(true);
+    // console.table(opponentData.board);
+
+    // shipLengths.map((length) => {
+    //   setPlayerData({
+    //     ...playerData,
+    //     board: boardWithRandomlyPlacedShips(length, playerBoard),
+    //   });
+    // });
+
+    generateRandomPlacements(setOpponentData, opponentData);
     setGameStart(true);
-    console.table(playerData.board);
   }
 
   return (

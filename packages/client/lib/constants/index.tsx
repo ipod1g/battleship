@@ -4,52 +4,27 @@ export const initialData = [
   {
     shipType: "destroyer",
     placed: false,
-    parts: [
-      {
-        hit: false,
-        location: [],
-      },
-    ],
+    partArray: [],
   },
   {
     shipType: "submarine",
     placed: false,
-    parts: [
-      {
-        hit: false,
-        location: [],
-      },
-    ],
+    partArray: [],
   },
   {
     shipType: "cruiser",
     placed: false,
-    parts: [
-      {
-        hit: false,
-        location: [],
-      },
-    ],
+    partArray: [],
   },
   {
     shipType: "battleship",
     placed: false,
-    parts: [
-      {
-        hit: false,
-        location: [],
-      },
-    ],
+    partArray: [],
   },
   {
     shipType: "carrier",
     placed: false,
-    parts: [
-      {
-        hit: false,
-        location: [],
-      },
-    ],
+    partArray: [],
   },
 ];
 
