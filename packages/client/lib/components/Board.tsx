@@ -5,12 +5,13 @@ import Cell from "./Cell";
 export interface Board {
   playerData: playerData;
   setPlayerData: React.Dispatch<React.SetStateAction<playerData>>;
-  selectedShipIndex: number; // I want to make this optional too
+  selectedShipIndex: number;
   setIsShipSelected?: React.Dispatch<React.SetStateAction<boolean>>;
   isShipSelected?: boolean;
   orientation?: "horizontal" | "vertical";
   setUserTurn?: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserFireLocation?: React.Dispatch<React.SetStateAction<number[]>>;
+  setUserFireLocation?: React.Dispatch<React.SetStateAction<number[] | null>>;
+  missedShotsArray?: number[][];
 }
 
 /** Creates the board for placement and for the opponent */
@@ -24,7 +25,7 @@ const Board = (props: Board) => {
             {Array(10)
               .fill(0)
               .map((val, j) => {
-                const test = props.playerData.shipInfo.find(
+                const shipWithMatchingLocation = props.playerData.shipInfo.find(
                   (ship) =>
                     ship.placed &&
                     ship.partArray.find(
@@ -45,15 +46,29 @@ const Board = (props: Board) => {
                     setUserFireLocation={props.setUserFireLocation}
                     coords={[i, j]}
                   >
-                    {/* {test ? test.partArray.length : 0} */}
-                    {test
-                      ? test.partArray.find(
+                    {/* {shipWithMatchingLocation ? shipWithMatchingLocation.partArray.length : 0} */}
+                    {shipWithMatchingLocation
+                      ? shipWithMatchingLocation.partArray.find(
                           (part) =>
                             part.location[0] === i && part.location[1] === j
                         )?.hit
-                        ? `-${props.playerData.shipInfo.indexOf(test) + 1}`
-                        : `${props.playerData.shipInfo.indexOf(test) + 1}`
-                      : 0}
+                        ? `-${
+                            props.playerData.shipInfo.indexOf(
+                              shipWithMatchingLocation
+                            ) + 1
+                            // The addition of 1 is due to the number 0 being occupied by empty board cell
+                            // Be aware of this difference in value when identifying ships
+                          }`
+                        : `${
+                            props.playerData.shipInfo.indexOf(
+                              shipWithMatchingLocation
+                            ) + 1
+                          }`
+                      : props.missedShotsArray?.some(
+                          (location) => location[0] === i && location[1] === j
+                        )
+                      ? "-9"
+                      : "0"}
                   </Cell>
                 );
               })}
