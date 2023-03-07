@@ -5,12 +5,12 @@ import { playerData } from "../interfaces/types";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   playerData: playerData;
   setPlayerData: React.Dispatch<React.SetStateAction<playerData>>;
-  selectedShipIndex: number | -1; // I want to make this optional too
+  selectedShipIndex: number;
   setIsShipSelected?: React.Dispatch<React.SetStateAction<boolean>>;
   isShipSelected?: boolean;
   orientation?: "horizontal" | "vertical";
   setUserTurn?: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserFireLocation?: React.Dispatch<React.SetStateAction<number[]>>;
+  setUserFireLocation?: React.Dispatch<React.SetStateAction<number[] | null>>;
   coords: number[];
 }
 
@@ -36,7 +36,6 @@ const Cell = (props: Props) => {
       onMouseDown={() => {
         // This is to prevent type error of null provoke
         if (!props.setUserFireLocation || !props.setUserTurn) return;
-        //send clicked coord to a function that checks
         props.setUserFireLocation(props.coords);
       }}
     >
