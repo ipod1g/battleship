@@ -17,25 +17,29 @@ export interface Props {
 
 const Game = (props: Props) => {
   const [selectedShipIndex, setSelectedShipIndex] = useState<number>(-1);
+  const [mounted, setMounted] = useState(false);
+  const [gameEnd, setGameEnd] = useState(false);
 
-  const [userFireLocation, setUserFireLocation] = useState<number[]>([-1, -1]);
+  const [userFireLocation, setUserFireLocation] = useState<number[] | null>(
+    null
+  );
   const [userTurn, setUserTurn] = useState(true);
+  const [playerMissedShotsArray, setPlayerMissedShotsArray] = useState<
+    number[][]
+  >([]);
+  const [opponentMissedShotsArray, setOpponentMissedShotsArray] = useState<
+    number[][]
+  >([]);
 
   /** Update board array after checking with ship's partArray locations */
   function updateHit(
     location: number[],
     playerData: playerData,
-    setPlayerData: React.Dispatch<React.SetStateAction<playerData>>
+    setPlayerData: React.Dispatch<React.SetStateAction<playerData>>,
+    setMissedShotsArray: React.Dispatch<React.SetStateAction<number[][]>>
   ) {
-    // condition for userturn
-
-    const x = location[0];
-    const y = location[1];
-
-    // If location already shot, alert pick another location
-
-    // const hitStatus = checkHit(location, props.playerData);
     const { shipPart, shipHit } = checkHit(location, playerData);
+    console.log(checkHit(location, playerData));
     console.log("shipPart: " + shipPart);
     console.log("shipType hit: " + shipHit);
 
@@ -44,45 +48,19 @@ const Game = (props: Props) => {
       //first number as row
       console.log("miss");
 
-      // Make this piece of code reusable -> updates board and placedlocation
-      setPlayerData((prev) => {
-        // const updatedBoard = prev.board.map((row, i) => {
-        //   if (i === x) {
-        //     // -9 is the missed shots
-        //     return row.map((cell, j) => (j === y ? -9 : cell));
-        //   }
-        //   return row;
-        // });
-        // const updatedMissedShotsArray = prev.shipInfo.map((ship, i) =>
-        //   i === shipPart
-        //     ? {
-        //         ...ship,
-        //         placedLocation: [...ship.placedLocation, [-1, -1]],
-        //       }
-        //     : ship
-        // );
-        return {
-          ...prev,
-          // board: updatedBoard,
-          // shipInfo: updatedMissedShotsArray,
-        };
+      setMissedShotsArray((prev) => {
+        prev = [...prev, location];
+        return prev;
       });
+      console.log("missed shots: " + playerMissedShotsArray);
     } else {
       console.log(
         props.playerData.shipInfo[shipHit]?.shipType + "-" + shipPart
       );
 
       setPlayerData((prev) => {
-        //   const updatedBoard = prev.board.map((row, i) => {
-        //     if (i === x) {
-        //       return row.map((cell, j) => (j === y ? -cell : cell));
-        //     }
-        //     return row;
-        //   });
-
         prev.shipInfo[shipHit].partArray[shipPart].hit = true;
 
-        console.log("PLZ: " + JSON.stringify(prev.shipInfo));
         return { ...prev, shipInfo: prev.shipInfo };
       });
     }
@@ -91,8 +69,8 @@ const Game = (props: Props) => {
   /** Returns the index of the part of ship hit
    * This code initializes indexAndShipType with [-1, -1] to represent the case where the location is not found
    */
-  function checkHit(checkLocation: number[], board: playerData) {
-    const shipPartAndShipType = board.shipInfo.reduce(
+  function checkHit(checkLocation: number[], playerData: playerData) {
+    const shipPartAndShipType = playerData.shipInfo.reduce(
       (result, info, shipType) => {
         const shipPart = info.partArray.findIndex(
           (part) =>
@@ -112,27 +90,93 @@ const Game = (props: Props) => {
     };
   }
 
-  // putting this on useEffect will trigger on mount so move it smwhr else ( userTurn screws up )
-  useEffect(() => {
-    console.log(userFireLocation);
-    if (userTurn) {
-      updateHit(userFireLocation, props.opponentData, props.setOpponentData);
-      console.log(userTurn);
-    } else {
-      console.log(userTurn);
-      // updateHit(userFireLocation, props.playerData, props.setPlayerData);
-    }
-    // updateHit(userFireLocation);
-    console.log(props.opponentData);
+  const missedLocationClickCheck = (userFireLocation: number[]) => {
+    return playerMissedShotsArray.some(
+      (arr) => arr[0] === userFireLocation[0] && arr[1] === userFireLocation[1]
+    );
+  };
 
-    return () => {};
+  const areAllShipHit = (data: playerData) => {
+    return data.shipInfo.every((ship) =>
+      ship.partArray.every((partStatus) => partStatus.hit === true)
+    );
+  };
+
+  const duplicateLocationClickCheck = (
+    userFireLocation: number[],
+    playerData: playerData
+  ) => {
+    return playerData.shipInfo.some(
+      (ship) =>
+        ship.placed &&
+        ship.partArray.some(
+          (part) =>
+            part.location[0] === userFireLocation[0] &&
+            part.location[1] === userFireLocation[1] &&
+            part.hit === true
+        )
+    );
+  };
+
+  useEffect(() => {
+    if (!mounted) {
+      setMounted(true);
+      return;
+    }
+    if (!userFireLocation) return;
+
+    if (
+      missedLocationClickCheck(userFireLocation) ||
+      duplicateLocationClickCheck(userFireLocation, props.opponentData)
+    ) {
+      alert("You have already clicked this location");
+    } else {
+      updateHit(
+        userFireLocation,
+        props.opponentData,
+        props.setOpponentData,
+        setPlayerMissedShotsArray
+      );
+      setTimeout(() => {
+        let validTargetFound = false;
+        while (!validTargetFound) {
+          const x = Math.floor(Math.random() * 10);
+          const y = Math.floor(Math.random() * 10);
+          if (
+            !missedLocationClickCheck([x, y]) &&
+            !duplicateLocationClickCheck([x, y], props.playerData)
+          ) {
+            updateHit(
+              [x, y],
+              props.playerData,
+              props.setPlayerData,
+              setOpponentMissedShotsArray
+            );
+            console.log("Valid Target Found: " + [x, y]);
+            validTargetFound = true;
+          }
+        }
+        setUserTurn(true);
+      }, 1100);
+
+      setUserTurn(false);
+    }
+    setUserFireLocation(null);
+
+    //Game end
+    if (areAllShipHit(props.playerData)) {
+      alert("AI WIN");
+    } else if (areAllShipHit(props.opponentData)) {
+      alert("USER WIN");
+    }
   }, [userFireLocation]);
 
+  // Separate useEffect to update userTurn after the async code above completes
   useEffect(() => {
-    console.log("playerdata changed");
-
-    return () => {};
-  }, [props.playerData]);
+    if (!userTurn) {
+      setUserTurn(true);
+    }
+  }, [userTurn]);
 
   return (
     <div className="main-container">
@@ -143,6 +187,7 @@ const Game = (props: Props) => {
           playerData={props.playerData}
           setUserTurn={setUserTurn}
           setUserFireLocation={setUserFireLocation}
+          missedShotsArray={opponentMissedShotsArray}
         />
 
         <Board
@@ -151,6 +196,7 @@ const Game = (props: Props) => {
           playerData={props.opponentData}
           setUserTurn={setUserTurn}
           setUserFireLocation={setUserFireLocation}
+          missedShotsArray={playerMissedShotsArray}
         />
       </div>
       {/* <ServerTest /> */}
