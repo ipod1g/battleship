@@ -19,7 +19,6 @@ const Game = (props: Props) => {
   const [selectedShipIndex, setSelectedShipIndex] = useState<number>(-1);
   const [mounted, setMounted] = useState(false);
   const [gameEnd, setGameEnd] = useState(false);
-
   const [userFireLocation, setUserFireLocation] = useState<number[] | null>(
     null
   );
@@ -118,6 +117,9 @@ const Game = (props: Props) => {
     );
   };
 
+  /**
+   * For User's turn
+   */
   useEffect(() => {
     if (!mounted) {
       setMounted(true);
@@ -137,6 +139,26 @@ const Game = (props: Props) => {
         props.setOpponentData,
         setPlayerMissedShotsArray
       );
+
+      setUserTurn(false);
+    }
+    setUserFireLocation(null);
+
+    //Game end
+    if (areAllShipHit(props.playerData)) {
+      alert("AI WIN");
+    } else if (areAllShipHit(props.opponentData)) {
+      alert("USER WIN");
+    }
+  }, [userFireLocation]);
+
+  /**
+   * This useEffect is used to update the userTurn after the async code above completes
+   * Actions here are only for the AI / opponent
+   * Put code for opponent's response here
+   */
+  useEffect(() => {
+    if (!userTurn) {
       setTimeout(() => {
         let validTargetFound = false;
         while (!validTargetFound) {
@@ -157,24 +179,7 @@ const Game = (props: Props) => {
           }
         }
         setUserTurn(true);
-      }, 1100);
-
-      setUserTurn(false);
-    }
-    setUserFireLocation(null);
-
-    //Game end
-    if (areAllShipHit(props.playerData)) {
-      alert("AI WIN");
-    } else if (areAllShipHit(props.opponentData)) {
-      alert("USER WIN");
-    }
-  }, [userFireLocation]);
-
-  // Separate useEffect to update userTurn after the async code above completes
-  useEffect(() => {
-    if (!userTurn) {
-      setUserTurn(true);
+      }, 500);
     }
   }, [userTurn]);
 
@@ -185,6 +190,7 @@ const Game = (props: Props) => {
           selectedShipIndex={selectedShipIndex}
           setPlayerData={props.setPlayerData}
           playerData={props.playerData}
+          userTurn={userTurn}
           setUserTurn={setUserTurn}
           setUserFireLocation={setUserFireLocation}
           missedShotsArray={opponentMissedShotsArray}
@@ -194,9 +200,11 @@ const Game = (props: Props) => {
           selectedShipIndex={selectedShipIndex}
           setPlayerData={props.setOpponentData}
           playerData={props.opponentData}
+          userTurn={userTurn}
           setUserTurn={setUserTurn}
           setUserFireLocation={setUserFireLocation}
           missedShotsArray={playerMissedShotsArray}
+          isClickble
         />
       </div>
       {/* <ServerTest /> */}

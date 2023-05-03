@@ -12,6 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setUserTurn?: React.Dispatch<React.SetStateAction<boolean>>;
   setUserFireLocation?: React.Dispatch<React.SetStateAction<number[] | null>>;
   coords: number[];
+  isClickable?: boolean;
 }
 
 const Cell = (props: Props) => {
@@ -35,7 +36,13 @@ const Cell = (props: Props) => {
       }}
       onMouseDown={() => {
         // This is to prevent type error of null provoke
-        if (!props.setUserFireLocation || !props.setUserTurn) return;
+        if (
+          !props.setUserFireLocation ||
+          !props.setUserTurn ||
+          !props.userTurn ||
+          !props.isClickable
+        )
+          return;
         props.setUserFireLocation(props.coords);
       }}
     >

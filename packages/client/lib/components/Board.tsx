@@ -9,9 +9,11 @@ export interface Board {
   setIsShipSelected?: React.Dispatch<React.SetStateAction<boolean>>;
   isShipSelected?: boolean;
   orientation?: "horizontal" | "vertical";
+  userTurn: boolean;
   setUserTurn?: React.Dispatch<React.SetStateAction<boolean>>;
   setUserFireLocation?: React.Dispatch<React.SetStateAction<number[] | null>>;
   missedShotsArray?: number[][];
+  isClickble?: boolean;
 }
 
 /** Creates the board for placement and for the opponent */
@@ -45,6 +47,8 @@ const Board = (props: Board) => {
                     setUserTurn={props.setUserTurn}
                     setUserFireLocation={props.setUserFireLocation}
                     coords={[i, j]}
+                    isClickable={props.isClickble}
+                    userTurn={props.userTurn}
                   >
                     {/* {shipWithMatchingLocation ? shipWithMatchingLocation.partArray.length : 0} */}
                     {shipWithMatchingLocation
