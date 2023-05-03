@@ -9,7 +9,7 @@ export interface Board {
   setIsShipSelected?: React.Dispatch<React.SetStateAction<boolean>>;
   isShipSelected?: boolean;
   orientation?: "horizontal" | "vertical";
-  userTurn: boolean;
+  userTurn?: boolean;
   setUserTurn?: React.Dispatch<React.SetStateAction<boolean>>;
   setUserFireLocation?: React.Dispatch<React.SetStateAction<number[] | null>>;
   missedShotsArray?: number[][];
